@@ -8,6 +8,87 @@
 
 <img src="/Users/ethan/Desktop/InterviewPractice/images/Complexity.png" alt="Complexity" style="zoom:67%;" />
 
+#### Heap sort
+
+```java
+// Java program for implementation of Heap Sort 
+public class HeapSort 
+{ 
+    public void sort(int arr[]) 
+    { 
+        int n = arr.length; 
+  
+        // Build heap (rearrange array) 
+        for (int i = n / 2 - 1; i >= 0; i--) 
+            heapify(arr, n, i); 
+  
+        // One by one extract an element from heap 
+        for (int i=n-1; i>0; i--) 
+        { 
+            // Move current root to end 
+            int temp = arr[0]; 
+            arr[0] = arr[i]; 
+            arr[i] = temp; 
+  
+            // call max heapify on the reduced heap 
+            heapify(arr, i, 0); 
+        } 
+    } 
+  
+    // To heapify a subtree rooted with node i which is 
+    // an index in arr[]. n is size of heap 
+    void heapify(int arr[], int n, int i) 
+    { 
+        int largest = i; // Initialize largest as root 
+        int l = 2*i + 1; // left = 2*i + 1 
+        int r = 2*i + 2; // right = 2*i + 2 
+  
+        // If left child is larger than root 
+        if (l < n && arr[l] > arr[largest]) 
+            largest = l; 
+  
+        // If right child is larger than largest so far 
+        if (r < n && arr[r] > arr[largest]) 
+            largest = r; 
+  
+        // If largest is not root 
+        if (largest != i) 
+        { 
+            int swap = arr[i]; 
+            arr[i] = arr[largest]; 
+            arr[largest] = swap; 
+  
+            // Recursively heapify the affected sub-tree 
+            heapify(arr, n, largest); 
+        } 
+    } 
+  
+    /* A utility function to print array of size n */
+    static void printArray(int arr[]) 
+    { 
+        int n = arr.length; 
+        for (int i=0; i<n; ++i) 
+            System.out.print(arr[i]+" "); 
+        System.out.println(); 
+    } 
+  
+    // Driver program 
+    public static void main(String args[]) 
+    { 
+        int arr[] = {12, 11, 13, 5, 6, 7}; 
+        int n = arr.length; 
+  
+        HeapSort ob = new HeapSort(); 
+        ob.sort(arr); 
+  
+        System.out.println("Sorted array is"); 
+        printArray(arr); 
+    } 
+} 
+```
+
+
+
 #### Merge sort
 
 时间复杂性稳定，但是占用空间大，空间换效率
@@ -442,6 +523,30 @@ DHCP 工作过程如下：
 
 **路由器只有下面三层协议**，因为路由器位于网络核心中，不需要为进程或者应用程序提供服务，因此也就不需要传输层和应用层。
 
+# 编译器
+
+##1.词法分析（lexical analysis）
+
+词法分析是编译过程的第一个阶段。这个阶段的任务是从左到右的读取每个字符，然后根据构词规则识
+
+别单
+
+词。词法分析可以用 lex 等工具自动生成。
+
+##2.语法分析（syntax analysis）
+
+语法分析是编译过程的一个逻辑阶段。语法分析在词法分析的基础上，将单词序列组合成各类语法短
+
+语，如
+
+“程序”，“语句”，“表达式”等等。语法分析程序判断程序在结构上是否正确。
+
+##3.语义分析（semantic analysis）
+
+属于逻辑阶段。对源程序进行上下文有关性质的审查，类型检查。如赋值语句左右端类型匹配问题。
+
+所以 BCD 都属于词法分析，选择结果为 BCD
+
 # Machine Learning
 
 Precision: 挑出的瓜中好瓜的比例
@@ -475,6 +580,63 @@ ssd：用vgg16作为骨干网络，在不同的卷积层引出一个全联接层
 17. 单例实现(我一般用enum写，不容易被挑毛病)
 18. 用Java模拟一个栈，并能够做到扩容，并且能有同步锁。（用数组实现）
 19. Java泛型机制，泛型机制的优点，以及类型变量
+
+
+
+## Java内部类
+
+ 1.根据注释填写(1)，(2)，(3)处的代码
+
+```java
+public class Test{
+    public static void main(String[] args){
+           // 初始化Bean1
+           (1)
+           bean1.I++;
+           // 初始化Bean2
+           (2)
+           bean2.J++;
+           //初始化Bean3
+           (3)
+           bean3.k++;
+    }
+    class Bean1{
+           public int I = 0;
+    }
+ 
+    static class Bean2{
+           public int J = 0;
+    }
+}
+ 
+class Bean{
+    class Bean3{
+           public int k = 0;
+    }
+}
+```
+
+　　从前面可知，对于成员内部类，必须先产生外部类的实例化对象，才能产生内部类的实例化对象。而静态内部类不用产生外部类的实例化对象即可产生内部类的实例化对象。
+
+　　创建静态内部类对象的一般形式为： 外部类类名.内部类类名 xxx = new 外部类类名.内部类类名()
+
+　　创建成员内部类对象的一般形式为： 外部类类名.内部类类名 xxx = 外部类对象名.new 内部类类名()
+
+　　因此，（1），（2），（3）处的代码分别为：
+
+```java
+Test test = new Test();    
+Test.Bean1 bean1 = test.new Bean1();   
+```
+
+```java
+Test.Bean2 b2 = new Test.Bean2();    
+```
+
+```java
+Bean bean = new Bean();     
+Bean.Bean3 bean3 =  bean.new Bean3(); 
+```
 
 
 
@@ -834,4 +996,8 @@ private static void sayHello(Function<String, String> func, String parameter){
 **equals函数里面一定要是Object类型作为参数**
 
 **equals方法本身不要过于智能，只要判断一些值相等即可。**
+
+###Integer == equals
+
+object一般是不能直接比较的，但是比较两个Integer的时候如果value 在-128 - 127之间会自动拆箱使用 Integer.valueOf() 来比较值的大小。若超出范围则比较引用地址，就是false了
 
